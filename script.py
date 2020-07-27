@@ -38,11 +38,7 @@ else:
 file_in = open(path, "r")
 content = file_in.readlines()
 
-<<<<<<< HEAD
 file_out = open("modified "+file_in.name,"w")
-=======
-file_out = open(file_in.name+" modified","w")
->>>>>>> 0a337501aa4494cd4f0cd6571a79645cfeab1423
 
 begin = 0 #On commence a trier a partir de la ligne 0
 
