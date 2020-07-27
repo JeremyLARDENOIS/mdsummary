@@ -21,7 +21,7 @@ def title (msg):
 
 
     for word in tab[1:]:
-        title += word
+        title += word + " "
 
     return (level,title)
 
@@ -39,12 +39,34 @@ file_in = open(path, "r")
 content = file_in.readlines()
 
 file_out = open(file_in.name+" modified","w")
-for line in content:
+
+begin = 0 #On commence a trier a partir de la ligne 0
+
+#On met le titre si il y en a un
+level, msg = title(content[0]) 
+
+if level == 1:
+    file_out.write('# ' + msg + "\n")
+    begin = 1
+
+
+#On etabli le sommaire
+file_out.write('## Sommaire\n')
+numline = begin
+while numline < len(content):
+    if content[numline][0] == '#':
+        level, msg = title(content[numline]) 
+        file_out.write("\n")
+        for i in range(2,level):
+            file_out.write("  ")
+        file_out.write('- ' + msg )
+    numline += 1
+
+
+#On rajoute la suite
+for line in content[begin:]:
     file_out.write(line)
 
 
 file_out.close()
-
-
-
 file_in.close()
