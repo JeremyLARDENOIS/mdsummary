@@ -3,7 +3,7 @@
 import sys
 
 def help():
-    print ("Usage : ./script.py [path_to_file]")
+    print ("Usage : ./script.py [path_to_file] (path new_file)")
 
 def title (msg):
     '''
@@ -27,14 +27,17 @@ def title (msg):
 
 ####################################################
 def main():
-  if len(sys.argv) > 2:
+  '''Fonction principale'''
+  if 1 > len(sys.argv) > 3:
       help()
       exit(0)
+  elif len(sys.argv) == 3:
+    pathin = sys.argv[1]
+    pathout = sys.argv[2]
   elif len(sys.argv) == 2:
-      path = sys.argv[1]
-  else:
-      path = input("Chemin du fichier à traiter : ")
-
+      pathin = sys.argv[1]
+      pathout = sys.argv[1]
+      
   file_in = open(path, "r")
   content = file_in.readlines()
 
