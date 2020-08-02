@@ -52,34 +52,46 @@ def main():
 
   if level == 1:
       #file_out.write('# ' + msg + "\n")
-      msg += '# ' + msg + "\n"
+      content_out += '# ' + msg + "\n"
       begin = 1
+
+#Si il y a déjà un sommaire, on le supprime
+  level, msg = title(content[2])
+  if (level == 2 and msg == "Sommaire\n "):
+    begin = 3
+    level, msg = title(content[begin])
+    while level != 2:
+      begin += 1
+      level, msg = title(content[begin])
 
 
   #On etabli le sommaire
   #file_out.write('## Sommaire\n')
+  content_out += '## Sommaire\n'
   numline = begin
+
   while numline < len(content):
       if content[numline][0] == '#':
           level, msg = title(content[numline]) 
           #file_out.write("\n")
-          msg += "\n"
+          content_out += "\n"
           for i in range(2,level):
               #file_out.write("  ")
-              msg += "  "
+              content_out += "  "
           #file_out.write('- ' + msg )
-          msg += "- " + msg
+          content_out += "- " + msg
       numline += 1
 
 
   #On rajoute la suite
   for line in content[begin:]:
       #file_out.write(line)
-      msg += line
+      content_out += line
 
   
   file_in.close()
   file_out = open(pathout,"w")
+  file_out.write(content_out)
   file_out.close()
 
 
