@@ -2,10 +2,10 @@
 
 import sys
 
-def help():
+def help(exitCode = 0):
     print ("Usage : ./script.py [path_to_file] (path_to_new_file)")
-    print ("If no path_to_new_file, path_to_new_file = path_to_file")
-    exit(0)
+    print ("\nIf no path_to_new_file, path_to_file will be updated\n")
+    exit(exitCode)
 
 def title (msg):
     '''
@@ -21,7 +21,6 @@ def title (msg):
             break
         level+=1
 
-
     for word in tab[1:]:
         title += word + " "
 
@@ -30,8 +29,10 @@ def title (msg):
 ####################################################
 def main():
   '''Fonction principale'''
-  if 1 > len(sys.argv) > 3:
-      help()
+  # print(len(sys.argv))
+  if (len(sys.argv) <= 1) or (len(sys.argv) > 3):
+      print("Bad Usage\n")
+      help(1)
   elif len(sys.argv) == 3:
     pathin = sys.argv[1]
     pathout = sys.argv[2]
@@ -55,9 +56,15 @@ def main():
       content_out += '# ' + msg + "\n"
       begin = 1
 
+  #Tant que l'on a pas de titre, on suppose que cela fait partie de la description
+  while (level != 2):
+    content_out += content[begin]
+    begin += 1
+    level, msg = title(content[begin])
+
 #Si il y a déjà un sommaire, on le supprime
   level, msg = title(content[2])
-  if (level == 2 and msg == "Sommaire\n "):
+  if (level == 2 and msg == "Sommaire"):
     begin = 3
     level, msg = title(content[begin])
     while level != 2:
@@ -71,6 +78,7 @@ def main():
   numline = begin
 
   while numline < len(content):
+      #print(content[numline], title(content)[0])
       if content[numline][0] == '#':
           level, msg = title(content[numline]) 
           #file_out.write("\n")
@@ -81,7 +89,7 @@ def main():
           #file_out.write('- ' + msg )
           content_out += "- " + msg
       numline += 1
-
+  content_out += "\n"
 
   #On rajoute la suite
   for line in content[begin:]:

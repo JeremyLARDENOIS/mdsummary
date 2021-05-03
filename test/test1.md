@@ -16,6 +16,7 @@ in the file test1.md
 Yes, it is the first h3 of the file
 and the first h3 in the second h2
 
-### This is the second h3
+### This is the second h3
+
 Yes, it is the second h3 of the file
 and the second h3 in the second h2
