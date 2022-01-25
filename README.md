@@ -6,7 +6,7 @@ A simple python3 script who create a simple summary to markdown file
 
 - python3
 - Markdown format:
-  - The file must have a title on the first line
+  - The file can have a title on the first line
   - The second line must be blank/empty
   - The third line must be a little description or h2
   - After the little description, if there is one, use a h2.

@@ -7,7 +7,7 @@ def help(exitCode = 0):
     print ("\nIf no path_to_new_file, path_to_file will be updated\n")
     exit(exitCode)
 
-def title (msg):
+def find_title_level (msg):
     '''
     return tuple (size,title) or (0,None) if isn't a title
     '''
@@ -26,10 +26,28 @@ def title (msg):
 
     return (level,title)
 
+def extract_all_titles(content):
+    '''
+    Allow to extract all content
+    return a list of title. A value can be another list or a string
+    '''
+    titles = []
+    for line in content:
+        level, text = find_title_level(line)
+        if level != 0:
+            # need a refactor
+            i = 2 # we don't count the main title
+            result = text.split('\n ')[0] # there is '\n ' to the end
+            while i < level:
+                result = [result]
+                i+=1
+            titles.append(result) 
+    
+    return titles
+
 ####################################################
 def main():
-    '''Fonction principale'''
-    # print(len(sys.argv))
+    '''Main fonction'''
     if (len(sys.argv) <= 1) or (len(sys.argv) > 3):
         print("Bad Usage\n")
         help(1)
@@ -44,57 +62,48 @@ def main():
     # content is array of string where each string is a line
     content = file_in.readlines()
 
-    #file_out = open("modified "+file_in.name,"w")
+    # Init result
     content_out = ""
 
-    begin = 0 #On commence a trier a partir de la ligne 0
+    begin = 0 # We begin from line 0
 
-    #On met le titre si il y en a un
-    level, msg = title(content[0]) 
-
+    # We put the title if exists
+    level, msg = find_title_level(content[0]) 
     if level == 1:
-        #file_out.write('# ' + msg + "\n")
         content_out += '# ' + msg + "\n"
         begin = 1
 
-    #Tant que l'on a pas de titre, on suppose que cela fait partie de la description
-    while (level != 2):
+    # While no new title, we suppose that it's description
+    while (level == 0):
         content_out += content[begin]
         begin += 1
-        level, msg = title(content[begin])
+        level, msg = find_title_level(content[begin])
 
-    #Si il y a déjà un sommaire, on le supprime
-    level, msg = title(content[2])
+    # if summary already exists, we delete it, and we stop to new title
     if (level == 2 and msg == "Sommaire"):
-        begin = 3
-        level, msg = title(content[begin])
-        while level != 2:
+        begin += 1
+        level, msg = find_title_level(content[begin])
+        while level == 0:
             begin += 1
-            level, msg = title(content[begin])
+            level, msg = find_title_level(content[begin])
 
 
-    #On etabli le sommaire
-    #file_out.write('## Sommaire\n')
-    content_out += '## Sommaire\n'
-    numline = begin
+    # We etablish the summary
+    content_out += '## Sommaire\n\n'
 
-    while numline < len(content):
-        #print(content[numline], title(content)[0])
-        if content[numline][0] == '#':
-            level, msg = title(content[numline]) 
-            #file_out.write("\n")
-            content_out += "\n"
-            for i in range(2,level):
-                #file_out.write("  ")
-                content_out += "  "
-            #file_out.write('- ' + msg )
-            content_out += "- " + msg
-        numline += 1
-    content_out += "\n"
+    # We create a list of all titles
+    titles = extract_all_titles(content[begin:])
+    
+    # And we write the summary
+    for title in titles:
+        text=title
+        while type(text) != type(str()):
+            content_out += "  "
+            text=text[0]
+        content_out += "- " + text + "\n"
 
-    #On rajoute la suite
+    # We add the rest of the file
     for line in content[begin:]:
-        #file_out.write(line)
         content_out += line
 
     file_in.close()
@@ -102,6 +111,6 @@ def main():
     file_out.write(content_out)
     file_out.close()
 
-# if script is main
+# If script is main, execute main
 if __name__ == '__main__':
     main()
