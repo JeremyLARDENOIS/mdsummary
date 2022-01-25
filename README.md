@@ -27,9 +27,4 @@ cp test/test1.md .
 ./mdsummary.py test1.md
 ```
 
-## Usefull ?
-
-Not very much because github.com have a fonctionnality of summary in their application.
-Can be usefull if you want that your file can be read outside github
-
 Enjoy and have fun!
