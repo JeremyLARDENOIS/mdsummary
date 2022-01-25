@@ -100,11 +100,24 @@ def main():
         while type(text) != type(str()):
             content_out += "  "
             text=text[0]
-        content_out += "- " + text + "\n"
+        content_out += "- [" + text + '](#' + text.replace(' ','_') + ')\n'
+    content_out += '\n'
 
     # We add the rest of the file
     for line in content[begin:]:
-        content_out += line
+        level, msg = find_title_level(line)
+        if level == 0:
+            content_out += line
+        else:
+            msg_raw = msg.replace("\n ","")
+            content_out += '<div id="' + msg_raw.replace(' ','_')
+            content_out += '"><h' + str(level) + '>'
+            content_out += msg_raw
+            content_out += '</h' + str(level) + '></div>\n'
+
+            # for i in range(level):
+            #     content_out
+            # content_out += line
 
     file_in.close()
     file_out = open(pathout,"w")
